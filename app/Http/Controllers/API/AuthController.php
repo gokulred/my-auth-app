@@ -53,6 +53,25 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // We will implement this in Phase 5
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        if (!auth()->attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        return response()->json([
+            'message' => 'Login successful!',
+            'user' => $user,
+            'token' => $user->createToken('auth_token')->plainTextToken,
+        ]);
     }
 }
