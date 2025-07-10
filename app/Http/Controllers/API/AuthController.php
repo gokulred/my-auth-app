@@ -14,7 +14,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'account_type' => ['required', 'in:Individual,Private Business,Organisation,Company,Institution'],
-            'email' => ['required', 'email', 'max:255', 'unique:User,email'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
             // Conditional validation
             'name' => ['required_if:account_type,Individual', 'string', 'max:255'],
